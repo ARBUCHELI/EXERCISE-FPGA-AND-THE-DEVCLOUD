@@ -91,7 +91,7 @@ if __name__=='__main__':
     
     args=parser.parse_args() 
     main(args)
-<code></pre>
+</code></pre>
 
 # Step 2: Creating a Job Submission Script
 To submit a job to the DevCloud, you'll need to create a shell script. Similar to the Python script above, we'll use the <code>%%writefile</code> magic command to create a 
