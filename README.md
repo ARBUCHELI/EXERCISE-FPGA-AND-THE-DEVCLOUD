@@ -49,8 +49,8 @@ called <code>inference_on_device.py</code>. In the next cell, you will need to c
 %%writefile inference_on_device.py
 
 import time
-import cv2
 import numpy as np
+import cv2
 from openvino.inference_engine import IENetwork
 from openvino.inference_engine import IECore
 import argparse
@@ -65,21 +65,25 @@ def main(args):
 
     core = IECore()
     net = core.load_network(network=model, device_name=args.device, num_requests=1)
+    
+    # TODO: Load the model
+    
     print(f"Time taken to load model = {time.time()-start} seconds")
-
+    
     # Get the name of the input node
     input_name=next(iter(model.inputs))
-
+    
     # Reading and Preprocessing Image
     input_img=cv2.imread('/data/resources/car.png')
     input_img=cv2.resize(input_img, (300,300), interpolation = cv2.INTER_AREA)
     input_img=np.moveaxis(input_img, -1, 0)
 
-    # Running Inference in a loop on the same image
+    # TODO: Prepare the model for inference (create input dict etc.)
     input_dict={input_name:input_img}
-
+    
     start=time.time()
     for _ in range(10):
+        # TODO: Run Inference in a Loop
         net.infer(input_dict)
     
     print(f"Time Taken to run 10 Inference on FPGA is = {time.time()-start} seconds")
@@ -112,20 +116,24 @@ exec 1>/output/stdout.log 2>/output/stderr.log
 
 mkdir -p /output
 
+# TODO: Create DEVICE variable
+# TODO: Create MODELPATH variable
 DEVICE=$1
 MODELPATH=$2
 
+export AOCL_BOARD_PACKAGE_ROOT=/opt/intel/openvino/bitstreams/a10_vision_design_sg2_bitstreams/BSP/a10_1150_sg2
 
-source /opt/intel/init_openvino.sh
-aocl program acl0 /opt/intel/openvino/bitstreams/a10_vision_design_sg1_bitstreams/2019R4_PL1_FP16_MobileNet_Clamp.aocx
+source /opt/altera/aocl-pro-rte/aclrte-linux64/init_opencl.sh
+aocl program acl0 /opt/intel/openvino/bitstreams/a10_vision_design_sg2_bitstreams/2020-2_PL2_FP16_MobileNet_Clamp.aocx
 
+export CL_CONTEXT_COMPILER_MODE_INTELFPGA=3
 
-# Run the load model python script
+# TODO: Call the Python script
 python3 inference_on_device.py  --model_path ${MODELPATH} --device ${DEVICE}
 
 cd /output
 
-tar zcvf output.tgz stdout.log stderr.log
+tar zcvf output.tgz * # compresses all files in the current directory (output)
 </code></pre>
 
 # Step 3: Submitting a Job to Intel's DevCloud
