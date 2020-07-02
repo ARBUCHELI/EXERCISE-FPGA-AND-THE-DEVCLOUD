@@ -24,7 +24,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('/opt/intel_devcloud_support'))
 sys.path.insert(0, os.path.abspath('/opt/intel'))
-</code><pre>
+</code></pre>
 
 # The Model
 We will be using the code><vehicle-license-plate-detection-barrier-0106</code> model for this exercise. Remember that to run a model on the FPGA, we need to use 
